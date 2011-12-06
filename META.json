@@ -45,7 +45,7 @@
    "provides" : {
       "Locale::Utils::PlaceholderNamed" : {
          "file" : "lib/Locale/Utils/PlaceholderNamed.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       }
    },
    "release_status" : "stable",
@@ -54,5 +54,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.001"
+   "version" : "0.002"
 }

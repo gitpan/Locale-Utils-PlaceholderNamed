@@ -6,7 +6,7 @@ use MooseX::StrictConstructor;
 use namespace::autoclean;
 use syntax qw(method);
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 has strict => (
     is      => 'rw',
@@ -47,13 +47,13 @@ __END__
 
 Locale::Utils::PlaceholderNamed - Utils to expand named placeholders
 
-$Id: PlaceholderNamed.pm 374 2011-11-12 21:39:33Z steffenw $
+$Id: PlaceholderNamed.pm 392 2011-12-06 11:56:46Z steffenw $
 
 $HeadURL: https://perl-gettext-oo.svn.sourceforge.net/svnroot/perl-gettext-oo/Locale-Utils-PlaceholderNamed/trunk/lib/Locale/Utils/PlaceholderNamed.pm $
 
 =head1 VERSION
 
-0.001
+0.002
 
 =head1 SYNOPSIS
 
@@ -104,7 +104,7 @@ none
 
 =head1 DEPENDENCIES
 
-Moose
+L<Moose|Moose>
 
 L<MooseX::StrictConstructor|MooseX::StrictConstructor>
 

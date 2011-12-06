@@ -19,7 +19,7 @@ name: Locale-Utils-PlaceholderNamed
 provides:
   Locale::Utils::PlaceholderNamed:
     file: lib/Locale/Utils/PlaceholderNamed.pm
-    version: 0.001
+    version: 0.002
 recommends:
   Test::Pod: 1.14
   Test::Pod::Coverage: 1.04
@@ -32,4 +32,4 @@ requires:
   syntax: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.001
+version: 0.002
