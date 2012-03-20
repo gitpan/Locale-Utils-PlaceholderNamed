@@ -16,7 +16,7 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Test::Differences" : 0,
+            "Test::Differences" : "0.60",
             "Test::Exception" : 0,
             "Test::More" : 0,
             "Test::NoWarnings" : 0
@@ -35,6 +35,7 @@
          "requires" : {
             "Moose" : 0,
             "MooseX::StrictConstructor" : 0,
+            "MooseX::Types::Moose" : 0,
             "Syntax::Feature::Method" : 0,
             "namespace::autoclean" : 0,
             "perl" : "5.006",
@@ -45,7 +46,7 @@
    "provides" : {
       "Locale::Utils::PlaceholderNamed" : {
          "file" : "lib/Locale/Utils/PlaceholderNamed.pm",
-         "version" : "0.002"
+         "version" : "0.003"
       }
    },
    "release_status" : "stable",
@@ -54,5 +55,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.002"
+   "version" : "0.003"
 }
