@@ -1,4 +1,3 @@
-Build.PL
 Changes
 example/01_expand_named.pl
 lib/Locale/Utils/PlaceholderNamed.pm

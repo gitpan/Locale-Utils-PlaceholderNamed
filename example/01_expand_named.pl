@@ -40,13 +40,16 @@ for my $value (undef, 0 .. 2, '3234567.890', 4_234_567.890) { ## no critic (Magi
     () = print
         $obj->expand_named(
             'foo {plus} bar {plus} baz = {num} items',
-            plus => q{+},
-            num  => $value,
+            # also possible as hash reference
+            {
+                plus => q{+},
+                num  => $value,
+            },
     ),
     "\n";
 }
 
-# $Id: 01_expand_named.pl 376 2011-11-13 06:55:48Z steffenw $
+# $Id: 01_expand_named.pl 395 2012-03-20 20:17:19Z steffenw $
 
 __END__
 
