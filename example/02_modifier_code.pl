@@ -21,47 +21,38 @@ my $numeric_code = sub {
 };
 
 my $obj = Locale::Utils::PlaceholderNamed->new(
-    strict => 1,
+    modifier_code => sub {
+        my ($value, $attribute) = @_;
+        if ( $attribute eq 'num' ) {
+            return $numeric_code->($value);
+        }
+        return $value;
+    },
 );
 
 for my $value (undef, 0 .. 2, '345678.90', 45_678.90) { ## no critic (MagicNumbers)
     () = print
         $obj->expand_named(
-            '{count} EUR',
-            count => $numeric_code->($value),
+            '{count :num} EUR',
+            count => $value,
     ),
     "\n";
 }
-
-$obj->strict(0);
-
-for my $value (undef, 0 .. 2, '345678.90', 45_678.90) { ## no critic (MagicNumbers)
-    () = print
-        $obj->expand_named(
-            '{count} EUR',
-            # also possible as hash reference
-            {
-                count  => $value,
-            },
-    ),
-    "\n";
-}
-
-# $Id: 01_expand_named.pl 474 2014-01-24 11:51:14Z steffenw $
+# $Id: 02_modifier_code.pl 474 2014-01-24 11:51:14Z steffenw $
 
 __END__
 
 Output:
 
-{count} EUR
+# $Id: 02_modifier_code.pl 474 2014-01-24 11:51:14Z steffenw $
+
+__END__
+
+Output:
+
+ EUR
 0 EUR
 1 EUR
 2 EUR
 345.678,90 EUR
 45.678,9 EUR
- EUR
-0 EUR
-1 EUR
-2 EUR
-345678.90 EUR
-45678.9 EUR

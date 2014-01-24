@@ -1,27 +1,40 @@
 package Locale::Utils::PlaceholderNamed; ## no critic (TidyCode)
 
+use strict;
+use warnings;
+use Carp qw(confess);
 use Moo;
 use MooX::StrictConstructor;
-use MooX::Types::MooseLike::Base qw(Bool);
-use Carp qw(confess);
+use MooX::Types::MooseLike::Base qw(Bool CodeRef);
 use namespace::autoclean;
 
-our $VERSION = '0.004';
+our $VERSION = '0.005';
 
 has strict => (
     is  => 'rw',
     isa => Bool,
 );
 
-sub _mangle_value {
-    my ($self, $placeholder, $value) = @_;
+has modifier_code => (
+    is      => 'rw',
+    isa     => CodeRef,
+    clearer => 'clear_modifier_code',
+);
 
-    return
-        defined $value
-        ? $value
-        : $self->strict
-        ? $placeholder
-        : q{};
+sub _mangle_value {
+    my ($self, $placeholder, $value, $attribute) = @_;
+
+    defined $value
+        or return $self->strict ? $placeholder : q{};
+    defined $attribute
+        or return $value;
+    $self->modifier_code
+        or return $value;
+    $value = $self->modifier_code->($value, $attribute);
+    defined $value
+        or confess 'modifier_code returns nothing or undef';
+
+    return $value;
 }
 
 sub expand_named {
@@ -38,12 +51,19 @@ sub expand_named {
         };
 
     my $regex = join q{|}, map { quotemeta $_ } keys %{$arg_ref};
-    $text =~ s{ ## no critic (ComplexRegexes)
-        ( [{] ( $regex ) [}] )
+    ## no critic (EscapedMetacharacters)
+    $text =~ s{
+        (
+            \{
+            ( $regex )
+            (?: [ ]* [:] ( [^:\}]+ ) )?
+            \}
+        )
     }
     {
-        $self->_mangle_value($1, $arg_ref->{$2})
+        $self->_mangle_value($1, $arg_ref->{$2}, $3)
     }xmsge;
+    ## use critic (EscapedMetacharacters)
 
     return $text;
 }
@@ -58,13 +78,13 @@ __END__
 
 Locale::Utils::PlaceholderNamed - Utils to expand named placeholders
 
-$Id: PlaceholderNamed.pm 395 2012-03-20 20:17:19Z steffenw $
+$Id: PlaceholderNamed.pm 474 2014-01-24 11:51:14Z steffenw $
 
-$HeadURL: https://perl-gettext-oo.svn.sourceforge.net/svnroot/perl-gettext-oo/Locale-Utils-PlaceholderNamed/trunk/lib/Locale/Utils/PlaceholderNamed.pm $
+$HeadURL: svn+ssh://steffenw@svn.code.sf.net/p/perl-gettext-oo/code/Locale-Utils-PlaceholderNamed/trunk/lib/Locale/Utils/PlaceholderNamed.pm $
 
 =head1 VERSION
 
-0.004
+0.005
 
 =head1 SYNOPSIS
 
@@ -73,9 +93,20 @@ $HeadURL: https://perl-gettext-oo.svn.sourceforge.net/svnroot/perl-gettext-oo/Lo
     my $obj = Locale::Utils::PlaceholderNamed->new(
         # optional strict switch
         strict => 1,
+        # optional modifier code
+        modifier_code => sub {
+            my ( $value, $attribute ) = @_;
+            return
+                $attribute eq '%.3f'
+                ? sprintf($attribute, $value)
+                : $attribute eq 'accusative'
+                ? accusative($value)
+                : $value;
+        },
     );
 
     $expanded = $obj->expand_named($text, %args);
+    $expanded = $obj->expand_named($text, \%args);
 
 =head1 DESCRIPTION
 
@@ -89,6 +120,30 @@ If strict is false: undef will be converted to q{}.
 If strict is true: no replacement.
 
     $obj->strict(1); # boolean true or false;
+
+=head2 method modifier_code, clear_modifier_code
+
+The modifier code handles named attributes
+to modify the given placeholder value.
+
+If the placeholder name is C<{foo:bar}> then foo is the placeholder name
+and bar the attribute name.
+Space in front of the attribute name is allowed, e.g. C<{foo :bar}>.
+
+    my $code_ref = sub {
+        my ( $value, $attribute ) = @_;
+        return
+            $attribute eq 'num.03'
+            ? sprintf('%.03f, $value)
+            : $attribute eq 'accusative'
+            ? accusative($value)
+            : $value;
+    };
+    $obj->modifier_code($code_ref);
+
+To switch off this code - clear them.
+
+    $obj->clear_modifier_code;
 
 =head2 method expand_named
 
@@ -120,6 +175,8 @@ none
 
 =head1 DEPENDENCIES
 
+L<Carp|Carp>
+
 L<Moo|Moo>
 
 L<MooX::StrictConstructor|MooX::StrictConstructor>
@@ -127,8 +184,6 @@ L<MooX::StrictConstructor|MooX::StrictConstructor>
 L<MooX::Types::MooseLike|MooX::Types::MooseLike>
 
 L<namespace::autoclean|namespace::autoclean>
-
-L<syntax|syntax>
 
 =head1 INCOMPATIBILITIES
 
@@ -150,7 +205,7 @@ Steffen Winkler
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2011 - 2013,
+Copyright (c) 2011 - 2014,
 Steffen Winkler
 C<< <steffenw at cpan.org> >>.
 All rights reserved.
