@@ -8,7 +8,7 @@ use MooX::StrictConstructor;
 use MooX::Types::MooseLike::Base qw(Bool CodeRef);
 use namespace::autoclean;
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 has strict => (
     is  => 'rw',
@@ -56,7 +56,7 @@ sub expand_named {
         (
             \{
             ( $regex )
-            (?: [ ]* [:] ( [^:\}]+ ) )?
+            (?: [ ]* [:] ( [^\}]+ ) )?
             \}
         )
     }
@@ -78,13 +78,13 @@ __END__
 
 Locale::Utils::PlaceholderNamed - Utils to expand named placeholders
 
-$Id: PlaceholderNamed.pm 474 2014-01-24 11:51:14Z steffenw $
+$Id: PlaceholderNamed.pm 503 2014-05-13 06:13:23Z steffenw $
 
 $HeadURL: svn+ssh://steffenw@svn.code.sf.net/p/perl-gettext-oo/code/Locale-Utils-PlaceholderNamed/trunk/lib/Locale/Utils/PlaceholderNamed.pm $
 
 =head1 VERSION
 
-0.005
+0.006
 
 =head1 SYNOPSIS
 
@@ -159,6 +159,14 @@ Expands strings containing named placeholders like C<{name}>.
 or
 
     $expanded = $obj->expand_text($text, \%args);
+
+=head1 JAVASCRIPT
+
+Inside of this distribution is a directory named javascript.
+For more information see:
+L<Locale::TextDomain::OO::JavaScript|Locale::TextDomain::OO::JavaScript>
+
+This script depends on L<http://jquery.com/>.
 
 =head1 EXAMPLE
 

@@ -1,5 +1,8 @@
 Revision history for Perl extension Locale::Utils::PlaceholderNamed.
 
+0.006  Mon Oct 27 09:30:31 2014
+- added javascript folder
+
 0.005  Fri Jan 24 12:55:59 2014
 - added methods modifier_code and clear_modifier_code
 - removed Build.PL from distribution

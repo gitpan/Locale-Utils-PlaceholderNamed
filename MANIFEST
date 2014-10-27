@@ -1,6 +1,7 @@
 Changes
 example/01_expand_named.pl
 example/02_modifier_code.pl
+javascript/Locale/Utils/PlaceholderNamed.js
 lib/Locale/Utils/PlaceholderNamed.pm
 MANIFEST			This list of files
 README
